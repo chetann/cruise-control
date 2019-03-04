@@ -102,6 +102,7 @@ public class KafkaCruiseControlServlet extends HttpServlet {
    */
   protected void doOptions(HttpServletRequest request, HttpServletResponse response) {
     response.setStatus(SC_OK);
+    response.setHeader("Access-Control-Allow-Credentials","true");
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader("Access-Control-Request-Method", "OPTIONS, GET, POST");
   }
@@ -147,6 +148,15 @@ public class KafkaCruiseControlServlet extends HttpServlet {
    */
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+     if (_corsEnabled) {
+      response.setHeader("Access-Control-Allow-Credentials",
+              "true");
+      response.setHeader("Access-Control-Allow-Origin",
+                         _config.getString(KafkaCruiseControlConfig.WEBSERVER_HTTP_CORS_ORIGIN_CONFIG));
+      // This is required only as part of pre-flight response
+      response.setHeader("Access-Control-Request-Method",
+                         _config.getString(KafkaCruiseControlConfig.WEBSERVER_HTTP_CORS_ALLOWMETHODS_CONFIG));
+    }
     ACCESS_LOG.info("Received {}, {} from {}", urlEncode(request.toString()),
                     urlEncode(request.getRequestURL().toString()),
                     getClientIpAddress(request));
@@ -274,6 +284,15 @@ public class KafkaCruiseControlServlet extends HttpServlet {
    */
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+     if (_corsEnabled) {
+      response.setHeader("Access-Control-Allow-Credentials",
+              "true");
+      response.setHeader("Access-Control-Allow-Origin",
+                         _config.getString(KafkaCruiseControlConfig.WEBSERVER_HTTP_CORS_ORIGIN_CONFIG));
+      // This is required only as part of pre-flight response
+      response.setHeader("Access-Control-Request-Method",
+                         _config.getString(KafkaCruiseControlConfig.WEBSERVER_HTTP_CORS_ALLOWMETHODS_CONFIG));
+    }
     ACCESS_LOG.info("Received {}, {} from {}", urlEncode(request.toString()),
                     urlEncode(request.getRequestURL().toString()),
                     getClientIpAddress(request));
